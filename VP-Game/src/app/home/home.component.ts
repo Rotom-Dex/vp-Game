@@ -20,10 +20,15 @@ export class HomeComponent implements OnInit {
       x: 0,
       y: 0,
     })
-    const platImg1 = new Image()
-    platImg1.src = '../../assets/images/platform1.png'
+    
+    function ImgSrc(source:any){
+      const imgname = new Image()
+      imgname.src = '../../assets/images/'+source+'.png'
+      return imgname;
+    }
+    
     const Platform = [
-      new Platforms({ x: 200, y: 300, Image: platImg1 }),
+      new Platforms({ x: 200, y: 300, Image: ImgSrc('platform1') }),
       // new Platforms({ x: 600, y: 400 }),
       // new Platforms({ x: 800, y: 200 }),
     ]
