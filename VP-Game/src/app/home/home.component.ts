@@ -17,26 +17,41 @@ export class HomeComponent implements OnInit {
     canvas.width = 1024;
     canvas.height = 576;
     
-    const player1 = new Player({
+    let player1 = new Player({
       x: 100,
       y: 400,
     })
     
-    const Platform = [
-      new Platforms({ x: 100, y: 525, Image: ImgSrc('platform1') }),
-      new Platforms({ x: 600, y: 400, Image: ImgSrc('platform2') }),
-      new Platforms({ x: 1000, y: 200, Image: ImgSrc('platform3') }),
-    ]
+    let Platform: any[] = []
+    let bgimg: any[] = []
+    let scrollOffSet = 0
 
-    const bgimg = [
-      new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })
-    ]
+
+    function init(){
+       player1 = new Player({
+        x: 100,
+        y: 400,
+      })
+      
+       Platform = [
+        new Platforms({ x: 0, y: 525, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 600, y: 400, Image: ImgSrc('platform2') }),
+        new Platforms({ x: 1000, y: 200, Image: ImgSrc('platform3') }),
+      ]
+  
+       bgimg = [
+        new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })
+      ]
+       scrollOffSet = 0
+    }
+
     const gravity = 0.6;
     const keys = {
       d: { pressed: false, },
-      a: { pressed: false, }
+      a: { pressed: false, },
+      jump: {pressd: false, }
     }
-    let scrollOffSet = 0
+    
 
     function ImgSrc(source:any){
       const imgname = new Image()
@@ -61,26 +76,26 @@ export class HomeComponent implements OnInit {
 
       //movement
       if (keys.d.pressed && player1.position.x < 400) player1.velocity.x = 5
-      else if (keys.a.pressed && player1.position.x > 100) player1.velocity.x = -5
+      else if (keys.a.pressed && player1.position.x > 100 || keys.a.pressed && scrollOffSet === 0 && player1.position.x > 0) player1.velocity.x = -5
       else{
         player1.velocity.x = 0
 
         if (keys.d.pressed) {
-          scrollOffSet += 5
+          scrollOffSet += player1.speed
           Platform.forEach((platform) => {
-            platform.position.x -= 5
+            platform.position.x -= player1.speed
           })
           bgimg.forEach((bimg) => {
-            bimg.position.x -= 3
+            bimg.position.x -= player1.speed * .5
           })
         }
-        else if (keys.a.pressed) {
-          scrollOffSet -= 5
+        else if (keys.a.pressed && scrollOffSet > 0) {
+          scrollOffSet -= player1.speed
           Platform.forEach((platform) => {
-            platform.position.x += 5
+            platform.position.x += player1.speed
           })
           bgimg.forEach((bimg) => {
-            bimg.position.x += 3
+            bimg.position.x += player1.speed * .5
           })
         }
 
@@ -99,13 +114,18 @@ export class HomeComponent implements OnInit {
 
       if (scrollOffSet > 2000) {
         console.log("win Condition")
-      } else {
+      }
 
+      if (player1.position.y > canvas.height) {
+        init()
       }
     }
+
+    init()
     animate()
 
-    window.addEventListener('keydown', (event) => {
+    
+    addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'd':
           keys.d.pressed = true
@@ -114,7 +134,10 @@ export class HomeComponent implements OnInit {
           keys.a.pressed = true
           break
         case ' ':
-          player1.velocity.y = -20
+          if (!keys.jump.pressd) {
+            keys.jump.pressd = true;
+            player1.velocity.y = -10;
+          }
           break
       }
     }) 
@@ -126,7 +149,11 @@ export class HomeComponent implements OnInit {
         case 'a':
           keys.a.pressed = false
           break
-        }
+        case ' ':
+          keys.jump.pressd = false;
+          break
+        
+      }
       })
   }
   
