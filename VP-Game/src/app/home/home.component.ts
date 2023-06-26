@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Player } from '../class/player';
 import { Platforms } from '../class/Platforms';
+import { BGimg } from '../class/bgimg';
 
 @Component({
   selector: 'app-home',
@@ -17,22 +18,19 @@ export class HomeComponent implements OnInit {
     canvas.height = 576;
     
     const player1 = new Player({
-      x: 0,
-      y: 0,
+      x: 100,
+      y: 400,
     })
     
-    function ImgSrc(source:any){
-      const imgname = new Image()
-      imgname.src = '../../assets/images/'+source+'.png'
-      return imgname;
-    }
-    
     const Platform = [
-      new Platforms({ x: 200, y: 300, Image: ImgSrc('platform1') }),
-      // new Platforms({ x: 600, y: 400 }),
-      // new Platforms({ x: 800, y: 200 }),
+      new Platforms({ x: 100, y: 525, Image: ImgSrc('platform1') }),
+      new Platforms({ x: 600, y: 400, Image: ImgSrc('platform2') }),
+      new Platforms({ x: 1000, y: 200, Image: ImgSrc('platform3') }),
     ]
-    
+
+    const bgimg = [
+      new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })
+    ]
     const gravity = 0.6;
     const keys = {
       d: { pressed: false, },
@@ -40,11 +38,20 @@ export class HomeComponent implements OnInit {
     }
     let scrollOffSet = 0
 
+    function ImgSrc(source:any){
+      const imgname = new Image()
+      imgname.src = '../../assets/images/'+source+'.png'
+      return imgname;
+    }
+
     function animate(){
       window.requestAnimationFrame(animate)
       context.fillStyle = 'white';
       context.fillRect(0, 0, canvas.width, canvas.height);
       
+      bgimg.forEach((bimg) => {
+        bimg.draw(context)
+      })
       Platform.forEach((platform) => {
         platform.draw(context)
       })
@@ -63,11 +70,17 @@ export class HomeComponent implements OnInit {
           Platform.forEach((platform) => {
             platform.position.x -= 5
           })
+          bgimg.forEach((bimg) => {
+            bimg.position.x -= 3
+          })
         }
         else if (keys.a.pressed) {
           scrollOffSet -= 5
           Platform.forEach((platform) => {
             platform.position.x += 5
+          })
+          bgimg.forEach((bimg) => {
+            bimg.position.x += 3
           })
         }
 
@@ -113,7 +126,7 @@ export class HomeComponent implements OnInit {
         case 'a':
           keys.a.pressed = false
           break
-      }
+        }
       })
   }
   
