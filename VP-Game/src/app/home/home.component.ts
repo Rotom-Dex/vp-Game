@@ -20,30 +20,13 @@ export class HomeComponent implements OnInit {
     let player1 = new Player({
       x: 100,
       y: 400,
-    })
-    
-    let Platform: any[] = []
+    }) 
+    let Platform: any[] = [
+      new Platforms({ x: 0, y: 525, Image: ImgSrc('platform1') }),
+      new Platforms({ x: 192, y: 525, Image: ImgSrc('platform1') }),
+    ]
     let bgimg: any[] = []
     let scrollOffSet = 0
-
-
-    function init(){
-       player1 = new Player({
-        x: 100,
-        y: 400,
-      })
-      
-       Platform = [
-        new Platforms({ x: 0, y: 525, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 600, y: 400, Image: ImgSrc('platform2') }),
-        new Platforms({ x: 1000, y: 200, Image: ImgSrc('platform3') }),
-      ]
-  
-       bgimg = [
-        new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })
-      ]
-       scrollOffSet = 0
-    }
 
     const gravity = 0.6;
     const keys = {
@@ -52,11 +35,42 @@ export class HomeComponent implements OnInit {
       jump: {pressd: false, }
     }
     
-
     function ImgSrc(source:any){
       const imgname = new Image()
       imgname.src = '../../assets/images/'+source+'.png'
       return imgname;
+    }
+
+    function pushToPlatform() {
+      const newObj = [];
+      let x = 300 + (Platform.length - 2) * 400;
+      while (x <= 7100) {
+        const baseY = Math.floor(Math.random() * 251) + 100; // Random number between 100 and 350
+        const y = baseY + Math.floor(Math.random() * 251); // Random number between baseY and baseY + 250
+        const img = Math.random() < 0.5 ? ImgSrc('platform2') : ImgSrc('platform3'); // Randomly choose between "img1" and "img2"
+    
+        newObj.push(new Platforms({ x, y, Image: img }));
+        x += 400;
+      }
+      Platform = Platform.concat(newObj);
+    }
+    
+    function init(){
+       player1 = new Player({
+        x: 100,
+        y: 400,
+      })
+       Platform = [
+        new Platforms({ x: 0, y: 525, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 192, y: 525, Image: ImgSrc('platform1') }), // start
+        new Platforms({ x: 7500, y: 200, Image: ImgSrc('platform2') }), // win conditi0n
+      ]
+      pushToPlatform();
+      
+       bgimg = [
+        new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })
+      ]
+       scrollOffSet = 0
     }
 
     function animate(){
@@ -75,8 +89,8 @@ export class HomeComponent implements OnInit {
       player1.velocity.x = 0
 
       //movement
-      if (keys.d.pressed && player1.position.x < 400) player1.velocity.x = 5
-      else if (keys.a.pressed && player1.position.x > 100 || keys.a.pressed && scrollOffSet === 0 && player1.position.x > 0) player1.velocity.x = -5
+      if (keys.d.pressed && player1.position.x < 400 || keys.d.pressed && scrollOffSet === 7500 && player1.position.x > 0 ) player1.velocity.x = 5 //win stop scroll
+      else if (keys.a.pressed && player1.position.x > 100 || keys.a.pressed && scrollOffSet === 0 && player1.position.x > 0 ) player1.velocity.x = -5 //dont go back
       else{
         player1.velocity.x = 0
 
@@ -108,12 +122,12 @@ export class HomeComponent implements OnInit {
           && player1.position.y + player1.height + player1.velocity.y >= platform.position.y 
           && player1.position.x + player1.width >= platform.position.x 
           && player1.position.x <= platform.position.x + platform.width) {
-          player1.velocity.y = 0
+          player1.velocity.y = 0 
           }
       })
 
-      if (scrollOffSet > 2000) {
-        console.log("win Condition")
+      if (scrollOffSet > 7500) {
+        console.log("win")
       }
 
       if (player1.position.y > canvas.height) {
@@ -136,7 +150,7 @@ export class HomeComponent implements OnInit {
         case ' ':
           if (!keys.jump.pressd) {
             keys.jump.pressd = true;
-            player1.velocity.y = -10;
+            player1.velocity.y = -20;
           }
           break
       }
