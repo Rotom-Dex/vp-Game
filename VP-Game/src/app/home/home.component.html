@@ -1,4 +1,18 @@
-<div class="flex justify-center h-full">
-    <canvas #canvas class="border-amber-600 border-2" width="1024">
-</canvas>
+<div class="md:portraits:hidden grid pt-5 justify-center h-full w-screen">
+    <canvas #canvas class="grid border-2 border-amber-600 w-[100dvh]" ></canvas>
+    <div class="p-5 grid gap-5 grid-flow-col justify-around">
+        <div class="grid grid-flow-col gap-5 w-auto h-6">
+            <div class="grid ">
+                <img id="left-image" src="../../assets/images/arrow_left.png" alt="arrow_left">
+            </div>
+            <div class="grid ">
+                <img id="right-image" src="../../assets/images/arrow_right.png" alt="arrow_right">
+            </div>
+        </div>
+        <div class="grid grid-flow-col justify-end gap-5 w-auto h-6">
+            <div class="grid justify-end">
+                <img id="jump-image" src="../../assets/images/arrow_jump.png" alt="arrow_jump">
+            </div>
+        </div>
+    </div>
 </div>

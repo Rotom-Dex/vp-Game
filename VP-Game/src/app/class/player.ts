@@ -1,10 +1,14 @@
 export class Player {
-  position: any;
+  position: {
+    x: any;
+    y: any;
+    Image: any;
+  };
   velocity: any;
   height: any;
   width: any;
   speed: number;
-  clr: any;
+  // clr: any;
 
   constructor(position: any) {
     this.position = position;
@@ -14,14 +18,39 @@ export class Player {
       y: 1,
     };
     this.speed = 5;
-    this.height = 50;
-    this.width = 50;
-    this.clr;
+    this.width = position.Image.width;
+    this.height = position.Image.height;
+    // this.height = 50;
+    // this.width = 50;
+    // this.clr;   
   }
 
   draw(context: any) {
-    context.fillStyle = this.clr;
-    context.fillRect(this.position.x, this.position.y, 50, 50);
+    if (!this.position.Image) return;
+    // context.fillStyle = this.clr;
+    // context.fillRect(this.position.x, this.position.y, 50, 50);
+
+    // crop for animetion
+    // const cropbox = {
+    //   position: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   width: this.position.Image.width,
+    //   height: this.position.Image.height,
+    // };
+
+    context.drawImage(
+      this.position.Image,
+      // cropbox.position.x,
+      // cropbox.position.y,
+      // cropbox.width,
+      // cropbox.height,
+      this.position.x,
+      this.position.y,
+      this.position.Image.width,
+      this.position.Image.height,
+    );
   }
 
   update(context: any, canvas: HTMLCanvasElement, gravity: number) {

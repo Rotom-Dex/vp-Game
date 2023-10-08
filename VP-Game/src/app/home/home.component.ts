@@ -12,6 +12,10 @@ import { delay } from 'rxjs';
 export class HomeComponent implements OnInit {
   @ViewChild('canvas', { static: true }) c: any;
   ngOnInit(): void {
+    const leftImage = document.getElementById('left-image') as HTMLImageElement;
+    const rightImage = document.getElementById('right-image') as HTMLImageElement;
+    const jumpImage = document.getElementById('jump-image') as HTMLImageElement;
+
     const canvas = this.c.nativeElement;
     const context = canvas.getContext('2d');
 
@@ -19,17 +23,14 @@ export class HomeComponent implements OnInit {
     canvas.height = 576;
 
     let player1 = new Player({
-      x: 100,
-      y: 200,
+      x: 0,
+      y: 600,
+      Image: ImgSrc('slime_idol')
     });
     //charecter animation
-    player1.clr = 'gold';
+    // player1.clr = 'gold';
 
-    let Platform: any[] = [
-      new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') }),
-      new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') }), // start
-      new Platforms({ x: 7500, y: 288, Image: ImgSrc('platform1') }), // win conditi0n
-    ];
+    let Platform: any[] = [];
     let bgimg: any[] = [];
     let scrollOffSet = 0;
 
@@ -48,15 +49,15 @@ export class HomeComponent implements OnInit {
 
     function pushToPlatform() {
       const newObj = [];
-      let x = 300 + (Platform.length - 2) * 400;
-      while (x <= 7100) {
+      let x = (Platform.length - 2) * 350;
+      while (x <= 7600) {
         const baseY = Math.floor(Math.random() * 201) + 100; // Random number between 100 and 300
         const y = baseY + Math.floor(Math.random() * 201); // Random number between baseY and baseY + 200
         const img =
           Math.random() < 0.5 ? ImgSrc('platform2') : ImgSrc('platform3'); // Randomly choose between "img1" and "img2"
 
         newObj.push(new Platforms({ x, y, Image: img }));
-        x += 400;
+        x += 450;
       }
       Platform = Platform.concat(newObj);
     }
@@ -64,25 +65,30 @@ export class HomeComponent implements OnInit {
     function init() {
       player1 = new Player({
         x: 100,
-        y: 200,
+        y: 100,
+        Image: ImgSrc('slime_idol')
       });
       //charecter animation
-      player1.clr = 'gold';
       Platform = [
         new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') }),
         new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') }), // start
-        new Platforms({ x: 7500, y: 288, Image: ImgSrc('platform1') }), // win conditi0n
+        new Platforms({ x: 384, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 576, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 7884, y: 288, Image: ImgSrc('platform1') }), // win conditi0n
       ];
       pushToPlatform();
       // end platform
       Platform.push(
-        new Platforms({ x: 7692, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 7884, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') })
+        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') }), 
+        new Platforms({ x: 8268, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8460, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8652, y: 288, Image: ImgSrc('platform1') }),
       );
       bgimg = [new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })];
       scrollOffSet = 0;
     }
+
+
     function animate() {
       window.requestAnimationFrame(animate);
       context.fillStyle = 'white';
@@ -152,19 +158,19 @@ export class HomeComponent implements OnInit {
         init();
       }
     }
-
-    init();
+    
     animate();
+    init();
 
     //charecter animation player.clr = "color"
     addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'd':
+          player1.position.Image = ImgSrc('slime_idol')
           keys.d.pressed = true;
-          player1.clr = 'red';
           break;
         case 'a':
-          player1.clr = 'blue';
+          player1.position.Image = ImgSrc('slime_idol_left')
           keys.a.pressed = true;
           break;
         case ' ':
@@ -175,23 +181,46 @@ export class HomeComponent implements OnInit {
     addEventListener('keyup', (event) => {
       switch (event.key) {
         case 'd':
-          player1.clr = 'gold';
           keys.d.pressed = false;
           break;
         case 'a':
-          player1.clr = 'gold';
           keys.a.pressed = false;
           break;
         case ' ':
-          player1.clr = 'green';
-          setTimeout(() => {
-            player1.clr = 'gold';
-          }, 1000);
           keys.jump.pressd = true;
           player1.velocity.y = -20;
           break;
       }
     });
+
+    //experimental 
+    function triggerKeyEvent(key: string, isKeyDown: boolean) {
+      const event = new KeyboardEvent(isKeyDown ? 'keydown' : 'keyup', {
+        key: key,
+      });
+      window.dispatchEvent(event);
+    }
+    function addEventListenersWithKey(element: HTMLElement, key: string) {
+      element.addEventListener('touchstart', () => {
+        triggerKeyEvent(key, true);
+      });
+      element.addEventListener('touchend', () => {
+        triggerKeyEvent(key, false);
+      });
+    
+      element.addEventListener('mousedown', () => {
+        triggerKeyEvent(key, true);
+      });
+      element.addEventListener('mouseup', () => {
+        triggerKeyEvent(key, false);
+      });
+    }
+    
+    addEventListenersWithKey(leftImage, 'a');
+    addEventListenersWithKey(rightImage, 'd');
+    addEventListenersWithKey(jumpImage, ' ');
+    
+    
   }
 
   constructor() {}

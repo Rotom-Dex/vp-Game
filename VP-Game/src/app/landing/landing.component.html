@@ -1,34 +1,40 @@
-<div class="h-screen m-auto w-1/6">
-  <div class="flex flex-col gap-5 justify-center align-middle">
-    <div class="self-center">
-      <img src="../../assets/images/platform1.png" class="h-auto w-80" />
+
+<div class="grid w-full h-[100dvh] content-center">
+  <div class="grid gap-4 grid-flow-row auto-rows-max place-items-center">
+    <div class="grid align-middle h-auto">
+      <img
+        src="../../assets/images/slime_Big.png"
+        alt="Slime"
+        class="w-auto h-auto animate-bounce duration-1000"
+      />
     </div>
-    <p class="text-orange-200 text-6xl text-center font-extrabold">SlimeJump</p>
-    <button
-      routerLink="/game"
-      class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-2xl font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-    >
-      <span
-        class="relative px-28 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+
+    <div class="grid align-middle h-auto">
+      <p
+        class="bg-gradient-to-b from-sky-400 to-sky-200 text-6xl text-center bg-clip-text text-transparent font-extrabold border-cyan-100 border-1 "
       >
-        START
-      </span>
-    </button>
-    <!-- <button routerLink="/game" class="relative align-middle rounded-lg overflow-hidden border-none bg-transparent cursor-pointer outline-none select-none touch-manipulation transition-transform hover:brightness-110 active:translate-y-[-4px] focus:outline-none" role="button">
-            <span class="absolute inset-0 rounded-lg bg-black bg-opacity-25 transform translate-y-4 transition-transform cubic-bezier[.3,.7,.4,1]"></span>
-            <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-[hsl(340,100%,16%)] via-[hsl(340,100%,32%)] to-[hsl(340,100%,16%)]"></span>
-            <span class="relative text-5xl font-bold block p-7 md:p-5 lg:p-7 rounded-lg text-white bg-[hsl(345,100%,47%)] transform translate-y-[-4px] transition-transform cubic-bezier[.3,.7,.4,1]">
-                START
-            </span>
-        </button> -->
-    <!-- <button class=" text-[#451952] text-[40px] font-normal align-middle bg-[#F39F5A] no-underline inline-block cursor-pointer text-center px-6 py-3 rounded-full border-[solid] border-[#AE445A] border-[5px]
-        hover:border-[#F39F5A] hover:bg-[#AE445A] ease-in-out duration-500" routerLink="/game">
-            start
-        </button> -->
-    <button
-      class="text-[#451952] text-[40px] font-normal bg-[#F39F5A] no-underline inline-block text-center px-6 py-3 rounded-full border-[solid] border-[#AE445A] border-[5px] hover:border-[#F39F5A] hover:bg-[#AE445A] ease-in-out duration-500"
-    >
-      tutorial
-    </button>
+        SlimeJump
+      </p>
+    </div>
+
+    <div class="grid align-middle h-auto">
+      <button
+        routerLink="/"
+        class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-2xl font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-sky-400 to-sky-200 group-hover:from-sky-400 group-hover:to-sky-200 hover:text-black dark:text-white focus:ring-4 focus:outline-none focus:ring-sky-500 dark:focus:ring-sky-800"
+      >
+        <span
+          class="relative px-28 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+        >
+        <!-- <svg class="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12L3 18.9671C3 21.2763 5.53435 22.736 7.59662 21.6145L10.7996 19.8727M3 8L3 5.0329C3 2.72368 5.53435 1.26402 7.59661 2.38548L20.4086 9.35258C22.5305 10.5065 22.5305 13.4935 20.4086 14.6474L14.0026 18.131" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+          </svg> -->
+          START
+        </span>
+      </button>
+      
+    </div>
+    <div class="grid align-middle h-auto bg-slate-100">
+      
+    </div>
   </div>
 </div>
