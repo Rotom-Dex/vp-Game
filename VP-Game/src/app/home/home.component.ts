@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
     let player1 = new Player({
       x: 0,
       y: 600,
-      Image: ImgSrc('slime_idol')
+      Image: ImgSrc('slime_idol'),
     });
     //charecter animation
     // player1.clr = 'gold';
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
       player1 = new Player({
         x: 100,
         y: 100,
-        Image: ImgSrc('slime_idol')
+        Image: ImgSrc('slime_idol'),
       });
       //charecter animation
       Platform = [
@@ -79,15 +79,14 @@ export class HomeComponent implements OnInit {
       pushToPlatform();
       // end platform
       Platform.push(
-        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') }), 
+        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') }),
         new Platforms({ x: 8268, y: 288, Image: ImgSrc('platform1') }),
         new Platforms({ x: 8460, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8652, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8652, y: 288, Image: ImgSrc('platform1') })
       );
       bgimg = [new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })];
       scrollOffSet = 0;
     }
-
 
     function animate() {
       window.requestAnimationFrame(animate);
@@ -151,15 +150,14 @@ export class HomeComponent implements OnInit {
       });
 
       if (scrollOffSet >= 7500) {
-        console.log("you won")
+        console.log('you won');
       }
 
       if (player1.position.y > canvas.height) {
         init();
       }
-      
     }
-    
+
     animate();
     init();
 
@@ -167,11 +165,11 @@ export class HomeComponent implements OnInit {
     addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'd':
-          player1.position.Image = ImgSrc('slime_idol')
+          player1.position.Image = ImgSrc('slime_idol');
           keys.d.pressed = true;
           break;
         case 'a':
-          player1.position.Image = ImgSrc('slime_idol_left')
+          player1.position.Image = ImgSrc('slime_idol_left');
           keys.a.pressed = true;
           break;
         case ' ':
@@ -194,7 +192,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    //experimental 
+    //experimental
     function triggerKeyEvent(key: string, isKeyDown: boolean) {
       const event = new KeyboardEvent(isKeyDown ? 'keydown' : 'keyup', {
         key: key,
@@ -208,7 +206,7 @@ export class HomeComponent implements OnInit {
       element.addEventListener('touchend', () => {
         triggerKeyEvent(key, false);
       });
-    
+
       element.addEventListener('mousedown', () => {
         triggerKeyEvent(key, true);
       });
@@ -219,14 +217,15 @@ export class HomeComponent implements OnInit {
     addEventListenersWithKey(leftImage, 'a');
     addEventListenersWithKey(rightImage, 'd');
     addEventListenersWithKey(jumpImage, ' ');
-    
-    //experimental 
-    const noContext = document.getElementById("noMenu") as HTMLElement
 
-    noContext.addEventListener("contextmenu", (e) => {
+    //experimental
+    const noContext = document.getElementById('noMenu') as HTMLElement;
+
+    noContext.addEventListener('contextmenu', (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      return false;
     });
-
   }
 
   constructor() {}
