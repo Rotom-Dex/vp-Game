@@ -1,17 +1,23 @@
-<div id="noMenu" class="portrait:hidden grid pt-5 justify-center h-full w-screen">
+<div class="portrait:hidden grid pt-5 justify-center h-full w-screen">
     <canvas #canvas class="grid border-2 border-amber-600 w-[100dvh]" ></canvas>
     <div class="p-5 grid gap-5 grid-flow-col justify-around">
         <div class="grid grid-flow-col gap-5 w-auto h-6">
-            <div class="grid select-none">
-                <img id="left-image" unselectable="on" src="../../assets/images/arrow_left.png" alt="arrow_left">
-            </div>
             <div class="grid">
+                <span class="text-white text-xl">To Left</span>
+                <img id="left-image" src="../../assets/images/arrow_left.png" alt="arrow_left">
+                <span class="text-white text-xl">Press "a"<br>key</span>
+            </div>
+            <div class="grid ">
+                <span class="text-white text-xl">To Right</span>
                 <img id="right-image" src="../../assets/images/arrow_right.png" alt="arrow_right">
+                <span class="text-white text-xl">Press "d"<br>key</span>
             </div>
         </div>
-        <div class="grid grid-flow-col justify-end gap-5 w-auto h-6 ">
-            <div class="grid justify-end ">
+        <div class="grid grid-flow-col justify-end gap-5 w-auto h-6">
+            <div class="grid justify-end">
+                <span class="text-white text-xl">To Jump</span>
                 <img id="jump-image" src="../../assets/images/arrow_jump.png" alt="arrow_jump">
+                <span class="text-white text-xl">Press "<i>spacebar</i>"<br>key</span>
             </div>
         </div>
     </div>

@@ -2,14 +2,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Player } from '../class/player';
 import { Platforms } from '../class/Platforms';
 import { BGimg } from '../class/bgimg';
-import { delay } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'app-tutorial',
+  templateUrl: './tutorial.component.html',
+  styleUrls: ['./tutorial.component.css']
 })
-export class HomeComponent implements OnInit {
+export class TutorialComponent implements OnInit {
   @ViewChild('canvas', { static: true }) c: any;
   ngOnInit(): void {
     const leftImage = document.getElementById('left-image') as HTMLImageElement;
@@ -47,17 +46,12 @@ export class HomeComponent implements OnInit {
       return imgname;
     }
 
-    function pushToPlatform() {
+    function pushToPlatform(yIn: any) {
       const newObj = [];
-      let x = (Platform.length - 2) * 350;
-      while (x <= 7600) {
-        const baseY = Math.floor(Math.random() * 201) + 100; // Random number between 100 and 300
-        const y = baseY + Math.floor(Math.random() * 201); // Random number between baseY and baseY + 200
-        const img =
-          Math.random() < 0.5 ? ImgSrc('platform2') : ImgSrc('platform3'); // Randomly choose between "img1" and "img2"
-
-        newObj.push(new Platforms({ x, y, Image: img }));
-        x += 450;
+      let x = 0;
+      while (x <= 8500) {
+        newObj.push(new Platforms({ x, y: yIn, Image: ImgSrc('platform1') }));
+        x += 192;
       }
       Platform = Platform.concat(newObj);
     }
@@ -69,21 +63,10 @@ export class HomeComponent implements OnInit {
         Image: ImgSrc('slime_idol')
       });
       //charecter animation
-      Platform = [
-        new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') }), // start
-        new Platforms({ x: 384, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 576, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 7884, y: 288, Image: ImgSrc('platform1') }), // win conditi0n
-      ];
-      pushToPlatform();
-      // end platform
-      Platform.push(
-        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') }), 
-        new Platforms({ x: 8268, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8460, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8652, y: 288, Image: ImgSrc('platform1') }),
-      );
+      
+      pushToPlatform(288);
+      pushToPlatform(574)
+      
       bgimg = [new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })];
       scrollOffSet = 0;
     }
@@ -118,7 +101,7 @@ export class HomeComponent implements OnInit {
       else {
         player1.velocity.x = 0;
 
-        if (keys.d.pressed && scrollOffSet <= 7500) {
+        if (keys.d.pressed) {
           scrollOffSet += player1.speed;
           Platform.forEach((platform) => {
             platform.position.x -= player1.speed;
@@ -150,14 +133,9 @@ export class HomeComponent implements OnInit {
         }
       });
 
-      if (scrollOffSet >= 7500) {
-        console.log("you won")
-      }
-
       if (player1.position.y > canvas.height) {
         init();
       }
-      
     }
     
     animate();
@@ -216,17 +194,10 @@ export class HomeComponent implements OnInit {
         triggerKeyEvent(key, false);
       });
     }
+    
     addEventListenersWithKey(leftImage, 'a');
     addEventListenersWithKey(rightImage, 'd');
     addEventListenersWithKey(jumpImage, ' ');
-    
-    //experimental 
-    const noContext = document.getElementById("noMenu") as HTMLElement
-
-    noContext.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-    });
-
   }
 
   constructor() {}
