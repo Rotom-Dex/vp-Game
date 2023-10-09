@@ -1,8 +1,11 @@
-<div class="portrait:hidden grid pt-5 justify-center h-full w-screen">
+<div
+  id="noMenu"
+  class="portrait:hidden grid pt-5 justify-center h-full w-screen"
+>
   <canvas #canvas class="grid border-2 border-amber-600 w-[100dvh]"></canvas>
   <div class="p-5 grid gap-5 grid-flow-col justify-around">
     <div class="grid grid-flow-col gap-5 w-auto h-6">
-      <div class="grid">
+      <div class="grid select-none">
         <span class="text-white text-xl">To Left</span>
         <div
           id="left-image"
@@ -11,7 +14,7 @@
         ></div>
         <span class="text-white text-xl">Press "a"<br />key</span>
       </div>
-      <div class="grid">
+      <div class="grid select-none">
         <span class="text-white text-xl">To Right</span>
         <div
           id="right-image"
@@ -22,7 +25,7 @@
       </div>
     </div>
     <div class="grid grid-flow-col justify-end gap-5 w-auto h-6">
-      <div class="grid justify-end">
+      <div class="grid justify-end select-none">
         <span class="text-white text-xl">To Jump</span>
         <div
           id="jump-image"

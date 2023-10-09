@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
     const leftImage = document.getElementById('left-image') as HTMLImageElement;
     const rightImage = document.getElementById('right-image') as HTMLImageElement;
     const jumpImage = document.getElementById('jump-image') as HTMLImageElement;
+    const message = document.getElementById("message") as HTMLElement;
 
     const canvas = this.c.nativeElement;
     const context = canvas.getContext('2d');
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit {
     let Platform: any[] = [];
     let bgimg: any[] = [];
     let scrollOffSet = 0;
-
+    
     const gravity = 0.7;
     const keys = {
       d: { pressed: false },
@@ -108,7 +109,7 @@ export class HomeComponent implements OnInit {
         (keys.d.pressed && player1.position.x < 400) ||
         (keys.d.pressed && scrollOffSet === 7500 && player1.position.x > 0)
       )
-        player1.velocity.x = 5; //win stop scroll
+        player1.velocity.x = 5; //when stop scroll
       else if (
         (keys.a.pressed && player1.position.x > 100) ||
         (keys.a.pressed && scrollOffSet === 0 && player1.position.x > 0)
@@ -150,7 +151,7 @@ export class HomeComponent implements OnInit {
       });
 
       if (scrollOffSet >= 7500) {
-        console.log('you won');
+        console.log('you won'); //win condition 
       }
 
       if (player1.position.y > canvas.height) {
@@ -199,6 +200,7 @@ export class HomeComponent implements OnInit {
       });
       window.dispatchEvent(event);
     }
+    
     function addEventListenersWithKey(element: HTMLElement, key: string) {
       element.addEventListener('touchstart', () => {
         triggerKeyEvent(key, true);
