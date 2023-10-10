@@ -26,9 +26,9 @@ export class Player {
   }
 
   draw(context: any) {
-    if (!this.position.Image) return;
-    // context.fillStyle = this.clr;
-    // context.fillRect(this.position.x, this.position.y, 50, 50);
+    // if (!this.position.Image) return;
+    context.fillStyle = 'rgba(0,0,0,0)';
+    context.fillRect(this.position.x, this.position.y, 64, 64);
 
     // crop for animetion
     // const cropbox = {

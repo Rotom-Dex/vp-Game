@@ -21,17 +21,14 @@ export class TutorialComponent implements OnInit {
     canvas.width = 1024;
     canvas.height = 576;
 
-    let player1 = new Player({
-      x: 0,
-      y: 600,
-      Image: ImgSrc('slime_idol'),
-    });
-    //charecter animation
-    // player1.clr = 'gold';
-
-    let Platform: any[] = [];
+    let Platform: any[] = [new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') })];
     let bgimg: any[] = [];
     let scrollOffSet = 0;
+    let player1 = new Player({
+      x: 0,
+      y: 700,
+      Image: ImgSrc('slime_idol'),
+    });
 
     const gravity = 0.7;
     const keys = {
@@ -57,20 +54,20 @@ export class TutorialComponent implements OnInit {
     }
 
     function init() {
+      //charecter animation
       player1 = new Player({
-        x: 100,
-        y: 100,
+        x: 0,
+        y: -100,
         Image: ImgSrc('slime_idol'),
       });
-      //charecter animation
-
       pushToPlatform(288);
       pushToPlatform(574);
 
       bgimg = [new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })];
       scrollOffSet = 0;
+      
     }
-
+    init()
     function animate() {
       window.requestAnimationFrame(animate);
       context.fillStyle = 'white';
@@ -136,7 +133,8 @@ export class TutorialComponent implements OnInit {
         init();
       }
     }
-
+    
+    init()
     animate();
     init();
 

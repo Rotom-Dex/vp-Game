@@ -13,9 +13,15 @@ export class HomeComponent implements OnInit {
   @ViewChild('canvas', { static: true }) c: any;
   ngOnInit(): void {
     const leftImage = document.getElementById('left-image') as HTMLImageElement;
-    const rightImage = document.getElementById('right-image') as HTMLImageElement;
+    const rightImage = document.getElementById(
+      'right-image'
+    ) as HTMLImageElement;
     const jumpImage = document.getElementById('jump-image') as HTMLImageElement;
-    const message = document.getElementById("message") as HTMLElement;
+    const message = 'YOU WON!' as string;
+    let jumpLocked = false as boolean;
+    let opacity = 0;
+    const targetOpacity = 1;
+    const animationSpeed = 0.02;
 
     const canvas = this.c.nativeElement;
     const context = canvas.getContext('2d');
@@ -24,17 +30,20 @@ export class HomeComponent implements OnInit {
     canvas.height = 576;
 
     let player1 = new Player({
-      x: 0,
-      y: 600,
+      x: 100,
+      y: 576,
       Image: ImgSrc('slime_idol'),
     });
     //charecter animation
     // player1.clr = 'gold';
 
-    let Platform: any[] = [];
+    let Platform: any[] = [
+      new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') })
+    ];
     let bgimg: any[] = [];
     let scrollOffSet = 0;
-    
+
     const gravity = 0.7;
     const keys = {
       d: { pressed: false },
@@ -89,6 +98,7 @@ export class HomeComponent implements OnInit {
       scrollOffSet = 0;
     }
 
+    init( )
     function animate() {
       window.requestAnimationFrame(animate);
       context.fillStyle = 'white';
@@ -132,7 +142,7 @@ export class HomeComponent implements OnInit {
             platform.position.x += player1.speed;
           });
           bgimg.forEach((bimg) => {
-            bimg.position.x += player1.speed * 0.5;
+            bimg.position.x += player1.speed * 0.6;
           });
         }
       }
@@ -151,16 +161,43 @@ export class HomeComponent implements OnInit {
       });
 
       if (scrollOffSet >= 7500) {
-        console.log('you won'); //win condition 
+        // context.font = '100px Halvetica';
+        // context.fillText(message, canvas.width * 0.5, canvas.height * 0.4);
+        updateCanvas();
       }
 
       if (player1.position.y > canvas.height) {
+        opacity = 0;
         init();
       }
     }
-
+    init()
     animate();
     init();
+
+    const gifImage = new Image();
+    gifImage.src = '../../assets/images/the-goon-win.gif';
+
+    const updateCanvas = () => {
+      // let animationColor = "rgba(255, 255, 255,"+ opacity +")";
+      opacity += animationSpeed;
+      if (opacity > targetOpacity) {
+        opacity = targetOpacity;
+      }
+      // const textWidth = context.measureText(message).width;
+      // const textX = (canvas.width - textWidth) / 2;
+      // const textY = canvas.height * 0.4;
+
+      context.globalAlpha = opacity;
+      const gifX = (canvas.width - gifImage.width) / 2;
+      const gifY = (canvas.height - gifImage.height) / 2;
+
+      // context.font = '100px Helvetica';
+      // context.fillStyle = animationColor;
+      // context.fillText(message, textX, textY);
+      context.drawImage(gifImage, gifX, gifY);
+      context.globalAlpha = 1;
+    };
 
     //charecter animation player.clr = "color"
     addEventListener('keydown', (event) => {
@@ -187,8 +224,15 @@ export class HomeComponent implements OnInit {
           keys.a.pressed = false;
           break;
         case ' ':
-          keys.jump.pressd = true;
-          player1.velocity.y = -20;
+          if (!jumpLocked) {
+            keys.jump.pressd = true;
+            player1.velocity.y = -20;
+
+            jumpLocked = true;
+            setTimeout(() => {
+              jumpLocked = false;
+            }, 1250); // 2000 milliseconds = 2 seconds
+          }
           break;
       }
     });
@@ -200,7 +244,7 @@ export class HomeComponent implements OnInit {
       });
       window.dispatchEvent(event);
     }
-    
+
     function addEventListenersWithKey(element: HTMLElement, key: string) {
       element.addEventListener('touchstart', () => {
         triggerKeyEvent(key, true);
