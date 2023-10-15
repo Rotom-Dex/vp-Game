@@ -14,6 +14,7 @@ export class TutorialComponent implements OnInit {
     const leftImage = document.getElementById('left-image') as HTMLImageElement;
     const rightImage = document.getElementById('right-image') as HTMLImageElement;
     const jumpImage = document.getElementById('jump-image') as HTMLImageElement;
+    let isGrounded: boolean;
 
     const canvas = this.c.nativeElement;
     const context = canvas.getContext('2d');
@@ -34,7 +35,7 @@ export class TutorialComponent implements OnInit {
     const keys = {
       d: { pressed: false },
       a: { pressed: false },
-      jump: { pressd: false },
+      jump: { pressed: false },
     };
 
     function ImgSrc(source: any) {
@@ -126,6 +127,7 @@ export class TutorialComponent implements OnInit {
           player1.position.x <= platform.position.x + platform.width
         ) {
           player1.velocity.y = 0;
+          isGrounded = true
         }
       });
 
@@ -150,7 +152,12 @@ export class TutorialComponent implements OnInit {
           keys.a.pressed = true;
           break;
         case ' ':
-          keys.jump.pressd = false;
+          keys.jump.pressed = false;
+          if (keys.a.pressed == true) {
+            player1.position.Image = ImgSrc('slime-crouch-left');
+          }else{
+            player1.position.Image = ImgSrc('slime-crouch');
+          }
           break;
       }
     });
@@ -160,11 +167,20 @@ export class TutorialComponent implements OnInit {
           keys.d.pressed = false;
           break;
         case 'a':
+          player1.position.Image = ImgSrc('slime_idol');
           keys.a.pressed = false;
           break;
         case ' ':
-          keys.jump.pressd = true;
-          player1.velocity.y = -20;
+          if (isGrounded) {
+            keys.jump.pressed = true;
+            player1.velocity.y = -20;
+            isGrounded = false
+          }
+          if (keys.a.pressed == true) {
+            player1.position.Image = ImgSrc('slime_idol_left');
+          }else{
+            player1.position.Image = ImgSrc('slime_idol');
+          }
           break;
       }
     });

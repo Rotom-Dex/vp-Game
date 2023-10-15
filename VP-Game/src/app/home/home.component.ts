@@ -1,8 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Player } from '../class/player';
 import { Platforms } from '../class/Platforms';
 import { BGimg } from '../class/bgimg';
-import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +17,7 @@ export class HomeComponent implements OnInit {
     ) as HTMLImageElement;
     const jumpImage = document.getElementById('jump-image') as HTMLImageElement;
     const message = 'YOU WON!' as string;
-    let jumpLocked = false as boolean;
+    let isGrounded: boolean;
     let opacity = 0;
     const targetOpacity = 1;
     const animationSpeed = 0.02;
@@ -32,14 +31,14 @@ export class HomeComponent implements OnInit {
     let player1 = new Player({
       x: 100,
       y: 576,
-      Image: ImgSrc('slime_idol'),
+      Image: ImgSrc(''),
     });
     //charecter animation
     // player1.clr = 'gold';
 
     let Platform: any[] = [
       new Platforms({ x: 0, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') })
+      new Platforms({ x: 192, y: 288, Image: ImgSrc('platform1') }),
     ];
     let bgimg: any[] = [];
     let scrollOffSet = 0;
@@ -48,29 +47,8 @@ export class HomeComponent implements OnInit {
     const keys = {
       d: { pressed: false },
       a: { pressed: false },
-      jump: { pressd: false },
+      jump: { pressed: false },
     };
-
-    function ImgSrc(source: any) {
-      const imgname = new Image();
-      imgname.src = '../../assets/images/' + source + '.png';
-      return imgname;
-    }
-
-    function pushToPlatform() {
-      const newObj = [];
-      let x = (Platform.length - 2) * 350;
-      while (x <= 7600) {
-        const baseY = Math.floor(Math.random() * 201) + 100; // Random number between 100 and 300
-        const y = baseY + Math.floor(Math.random() * 201); // Random number between baseY and baseY + 200
-        const img =
-          Math.random() < 0.5 ? ImgSrc('platform2') : ImgSrc('platform3'); // Randomly choose between "img1" and "img2"
-
-        newObj.push(new Platforms({ x, y, Image: img }));
-        x += 450;
-      }
-      Platform = Platform.concat(newObj);
-    }
 
     function init() {
       player1 = new Player({
@@ -89,30 +67,27 @@ export class HomeComponent implements OnInit {
       pushToPlatform();
       // end platform
       Platform.push(
-        new Platforms({ x: 8076, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8268, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8460, y: 288, Image: ImgSrc('platform1') }),
-        new Platforms({ x: 8652, y: 288, Image: ImgSrc('platform1') })
+        new Platforms({ x: 8064, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8256, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8448, y: 288, Image: ImgSrc('platform1') }),
+        new Platforms({ x: 8640, y: 288, Image: ImgSrc('platform1') })
       );
       bgimg = [new BGimg({ x: 0, y: 0, Image: ImgSrc('map') })];
       scrollOffSet = 0;
     }
 
-    init( )
     function animate() {
-      window.requestAnimationFrame(animate);
       context.fillStyle = 'white';
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       bgimg.forEach((bimg) => {
         bimg.draw(context);
       });
+      player1.update(context, canvas, gravity);
+      player1.velocity.x = 0;
       Platform.forEach((platform) => {
         platform.draw(context);
       });
-
-      player1.update(context, canvas, gravity);
-      player1.velocity.x = 0;
 
       //movement
       if (
@@ -157,6 +132,7 @@ export class HomeComponent implements OnInit {
           player1.position.x <= platform.position.x + platform.width
         ) {
           player1.velocity.y = 0;
+          isGrounded = true;
         }
       });
 
@@ -170,11 +146,78 @@ export class HomeComponent implements OnInit {
         opacity = 0;
         init();
       }
+      window.requestAnimationFrame(animate);
     }
-    init()
-    animate();
     init();
+    animate();
 
+    //charecter animation player.clr = "color"
+    addEventListener('keydown', (event) => {
+      switch (event.key) {
+        case 'd':
+          player1.position.Image = ImgSrc('slime_idol');
+          keys.d.pressed = true;
+          break;
+        case 'a':
+          player1.position.Image = ImgSrc('slime_idol_left');
+          keys.a.pressed = true;
+          break;
+        case ' ':
+          if (keys.a.pressed == true) {
+            player1.position.Image = ImgSrc('slime-crouch-left');
+          } else {
+            player1.position.Image = ImgSrc('slime-crouch');
+          }
+          keys.jump.pressed = false;
+          break;
+      }
+    });
+    addEventListener('keyup', (event) => {
+      switch (event.key) {
+        case 'd':
+          keys.d.pressed = false;
+          break;
+        case 'a':
+          player1.position.Image = ImgSrc('slime_idol');
+          keys.a.pressed = false;
+          break;
+        case ' ':
+          if (isGrounded) {
+            keys.jump.pressed = true;
+            player1.velocity.y = -20;
+            isGrounded = false;
+          }
+          if (keys.a.pressed == true) {
+            player1.position.Image = ImgSrc('slime_idol_left');
+          } else {
+            player1.position.Image = ImgSrc('slime_idol');
+          }
+          break;
+      }
+    });
+
+    function ImgSrc(source: any) {
+      const imgname = new Image();
+      imgname.src = '../../assets/images/' + source + '.png';
+      return imgname;
+    }
+
+    function pushToPlatform() {
+      const newObj = [];
+      let x = (Platform.length - 2) * 350;
+      while (x <= 7600) {
+        const baseY = Math.floor(Math.random() * 201) + 100; // Random number between 100 and 300
+        const y = baseY + Math.floor(Math.random() * 201); // Random number between baseY and baseY + 200
+        const img =
+          Math.random() < 0.5 ? ImgSrc('platform2') : ImgSrc('platform3'); // Randomly choose between "img1" and "img2"
+
+        newObj.push(new Platforms({ x, y, Image: img }));
+        x += 450;
+      }
+      Platform = Platform.concat(newObj);
+    }
+
+    //experimental
     const gifImage = new Image();
     gifImage.src = '../../assets/images/the-goon-win.gif';
 
@@ -199,45 +242,6 @@ export class HomeComponent implements OnInit {
       context.globalAlpha = 1;
     };
 
-    //charecter animation player.clr = "color"
-    addEventListener('keydown', (event) => {
-      switch (event.key) {
-        case 'd':
-          player1.position.Image = ImgSrc('slime_idol');
-          keys.d.pressed = true;
-          break;
-        case 'a':
-          player1.position.Image = ImgSrc('slime_idol_left');
-          keys.a.pressed = true;
-          break;
-        case ' ':
-          keys.jump.pressd = false;
-          break;
-      }
-    });
-    addEventListener('keyup', (event) => {
-      switch (event.key) {
-        case 'd':
-          keys.d.pressed = false;
-          break;
-        case 'a':
-          keys.a.pressed = false;
-          break;
-        case ' ':
-          if (!jumpLocked) {
-            keys.jump.pressd = true;
-            player1.velocity.y = -20;
-
-            jumpLocked = true;
-            setTimeout(() => {
-              jumpLocked = false;
-            }, 1250); // 2000 milliseconds = 2 seconds
-          }
-          break;
-      }
-    });
-
-    //experimental
     function triggerKeyEvent(key: string, isKeyDown: boolean) {
       const event = new KeyboardEvent(isKeyDown ? 'keydown' : 'keyup', {
         key: key,
